@@ -1,0 +1,18 @@
+{
+  "name": "roon-slack-bot",
+  "version": "1.0.0",
+  "description": "Roon extension for posting playing status to Slack",
+  "main": "app.js",
+  "author": "Thomas Rosdahl",
+  "license": "MIT",
+  "dependencies": {
+    "command-line-args": "^4.0.7",
+    "imgur-node-api": "^0.1.0",
+    "node-roon-api": "github:roonlabs/node-roon-api",
+    "node-roon-api-image": "github:roonlabs/node-roon-api-image",
+    "node-roon-api-settings": "github:roonlabs/node-roon-api-settings",
+    "node-roon-api-status": "github:roonlabs/node-roon-api-status",
+    "node-roon-api-transport": "github:roonlabs/node-roon-api-transport",
+    "node-webhooks": "^1.2.4"
+  }
+}
