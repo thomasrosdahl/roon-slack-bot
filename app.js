@@ -90,40 +90,65 @@ function monitor() {
                 console.log('New trigger: ' + trigger);
                 var options = { scale: 'fit', width: 200, height: 200 };
                 console.log('Downloading image key=' + now_playing.image_key);
-                image.get_image(now_playing.image_key, options, function (error, content_type, image)
-                {
-                    if (error == true) { console.log('Error:' + error);  return; }
-                    fs.writeFile('image.tmp', image, function (err) {
-                        console.log('Uploading image');
-                        imgur.upload('image.tmp', function (err, res) {
-                            if (err != undefined) { console.log(err); return; }    
-                            if (res != undefined) {
-                                console.log('Triggering webhook')
-                                webHooks.trigger('slack', {attachments: [
-                                    {
-                                        "fallback": trigger,
-                                        "color": "#CCCCCC",
-                                        "title": trigger,
-                                        "title_link": 'https://www.google.com/search?q=' + encodeURIComponent(now_playing.three_line.line2 + ' ' + now_playing.three_line.line3),
-                                        "image_url": res.data.link,
-                                        "fields": [
-                                            {
-                                                "title": "Track",
-                                                "value": now_playing.three_line.line1,
-                                                "short": true
-                                            },
-                                            {
-                                                "title": "Artist",
-                                                "value": now_playing.three_line.line2,
-                                                "short": true
-                                            }
-                                        ]
-                                    }
-                                ]})
-                            }
+                if (now_playing.image_key != undefined) {
+                    image.get_image(now_playing.image_key, options, function (error, content_type, image)
+                    {
+                        if (error == true) { console.log('Error:' + error);  return; }
+                        fs.writeFile('image.tmp', image, function (err) {
+                            console.log('Uploading image');
+                            imgur.upload('image.tmp', function (err, res) {
+                                if (err != undefined) { console.log(err); return; }
+                                if (res != undefined) {
+                                    console.log('Triggering webhook')
+                                    webHooks.trigger('slack', {attachments: [
+                                        {
+                                            "fallback": trigger,
+                                            "color": "#CCCCCC",
+                                            "title": trigger,
+                                            "title_link": 'https://www.google.com/search?q=' + encodeURIComponent(now_playing.three_line.line2 + ' ' + now_playing.three_line.line3),
+                                            "image_url": res.data.link,
+                                            "fields": [
+                                                {
+                                                    "title": "Track",
+                                                    "value": now_playing.three_line.line1,
+                                                    "short": true
+                                                },
+                                                {
+                                                    "title": "Artist",
+                                                    "value": now_playing.three_line.line2,
+                                                    "short": true
+                                                }
+                                            ]
+                                        }
+                                    ]})
+                                }
+                            });
                         });
                     });
-                });
+                } else {
+                    console.log('Triggering webhook')
+                    webHooks.trigger('slack', {attachments: [
+                        {
+                            "fallback": trigger,
+                            "color": "#CCCCCC",
+                            "title": trigger,
+                            "title_link": 'https://www.google.com/search?q=' + encodeURIComponent(now_playing.three_line.line2 + ' ' + now_playing.three_line.line3),
+                            "image_url": 'https://i.imgur.com/R2lfJDL.jpg',
+                            "fields": [
+                                {
+                                    "title": "Track",
+                                    "value": now_playing.three_line.line1,
+                                    "short": true
+                                },
+                                {
+                                    "title": "Artist",
+                                    "value": now_playing.three_line.line2,
+                                    "short": true
+                                }
+                            ]
+                        }
+                    ]})
+                }
             }
         }
     }
